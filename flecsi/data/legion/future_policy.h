@@ -6,6 +6,8 @@
 #ifndef flecsi_data_legion_future_policy_h
 #define flecsi_data_legion_future_policy_h
 
+#include "flecsi/execution/legion/future.h"
+
 //----------------------------------------------------------------------------//
 //! @file
 //! @date Initial file creation: Jun 21, 2017
@@ -27,8 +29,9 @@ struct legion_future_handle_policy_t
   //--------------------------------------------------------------------------//
   //! The storage_type__ type determines the underlying storage mechanism
   //! for the backend runtime.
-  //--------------------------------------------------------------------------//
-
+  //--------------------------------------------------------------------------//  
+  //template <typename T>
+  //using task_future_type__ = flecsi::execution::legion_future__<T>;
   using future_type__ = Legion::Future;
 
 }; // class legion_data_policy_t

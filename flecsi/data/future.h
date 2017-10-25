@@ -120,11 +120,6 @@ struct future_data__
 
     f.fid = future_info.fid;
 
-    //FIXME IRINA
-    auto& fm = context.future_data_map();
-
-    f.future = fm[f.fid];
-
   return f;
 
   } // get_future

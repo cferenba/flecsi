@@ -38,6 +38,9 @@ template<
 >
 struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t {
 
+  using typename FUTURE_POLICY::future_type__;
+//  using typename FUTURE_POLICY::task_future_type__;
+
   //--------------------------------------------------------------------------//
   //! Default constructor.
   //--------------------------------------------------------------------------//
@@ -54,8 +57,31 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
   {
     future=b.future;
   }
-   using typename FUTURE_POLICY::future_type__; 
-   future_type__ future;
+
+  template< template<typename> typename C>
+  future_handle_base__
+  operator = (
+    const C<T>  &other
+  )
+  {
+     //FIXME
+     Legion::Future ff;
+     future = &ff;
+  //   future = other.raw_future();
+   //  return future;
+  }
+
+/*  future_handle_base__ (
+  const future_type__ other
+  )
+  {
+    //FIXME
+     //future = other;
+   //  return future;
+  }
+*/
+
+   future_type__ *future;
    future_id_t fid;  
 
 };

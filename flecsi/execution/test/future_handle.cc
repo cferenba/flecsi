@@ -66,10 +66,10 @@ void specialization_tlt_init(int argc, char ** argv) {
   ASSERT_EQ(context.execution_state(),
     static_cast<size_t>(SPECIALIZATION_TLT_INIT));
 
-  auto future = flecsi_get_future_handle(ns, pressure, double, 0);
-  flecsi_execute_task(future_handle_dump, single, future);
+//  auto future = flecsi_get_future_handle(ns, pressure, double, 0);
+//  flecsi_execute_task(future_handle_dump, single, future);
+//  future = flecsi_execute_task(writer, single, 0);
 #if 0
-  future = flecsi_execute_task(writer, single, 0);
   flecsi_execute_task(reader, single, future);
 #endif
 } // specialization_tlt_init
@@ -88,8 +88,10 @@ void driver(int argc, char ** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+  auto future = flecsi_get_future_handle(ns, pressure, double, 0);
+  flecsi_execute_task(future_handle_dump, single, future);
+  future = flecsi_execute_task(writer, single, 0);
 
-   auto future = flecsi_get_future_handle(ns, pressure, double, 0);
 #if 0
   flecsi_execute_task(data_handle_dump, single, future);
   flecsi_execute_task(exclusive_writer, single, future);
