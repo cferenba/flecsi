@@ -40,7 +40,7 @@
 #include "flecsi/execution/legion/internal_field.h"
 #include "flecsi/execution/legion/runtime_driver.h"
 #include "flecsi/execution/legion/runtime_state.h"
-#include "flecsi/execution/legion/future.h"
+#include "flecsi/execution/legion/future_policy.h"
 #include "flecsi/runtime/types.h"
 #include "flecsi/utils/common.h"
 #include "flecsi/utils/const_string.h"
@@ -625,7 +625,7 @@ struct legion_context_policy_t
 
   template <typename T>
   auto
-  reduce_max(legion_future__<T> & local_future)
+  reduce_max(legion_future_policy__<T> & local_future)
   {
     Legion::DynamicCollective& max_reduction = max_reduction_;
 
@@ -678,7 +678,7 @@ struct legion_context_policy_t
 
   template <typename T>
   auto
-  reduce_min(legion_future__<T> & local_future)
+  reduce_min(legion_future_policy__<T> & local_future)
   {
     Legion::DynamicCollective& min_reduction = min_reduction_;
 

@@ -28,6 +28,7 @@ set(execution_HEADERS
   function.h
   kernel.h
   task.h
+  future.h
 )
 
 set(DRIVER_INITIALIZATION driver_initialization.cc)
@@ -60,7 +61,7 @@ elseif(FLECSI_RUNTIME_MODEL STREQUAL "legion")
     ${execution_HEADERS}
     legion/context_policy.h
     legion/execution_policy.h
-    legion/future.h
+    legion/future_policy.h
     legion/helper.h
     legion/init_args.h
     legion/init_handles.h
@@ -94,7 +95,7 @@ elseif(FLECSI_RUNTIME_MODEL STREQUAL "mpi")
     mpi/context_policy.h
     mpi/execution_policy.h
     mpi/finalize_handles.h
-    mpi/future.h
+    mpi/future_policy.h
     mpi/runtime_driver.h
     mpi/task_epilog.h
     mpi/task_prolog.h

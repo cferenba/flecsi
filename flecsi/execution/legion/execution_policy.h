@@ -30,7 +30,7 @@
 #include "flecsi/execution/common/processor.h"
 #include "flecsi/execution/context.h"
 #include "flecsi/execution/legion/context_policy.h"
-#include "flecsi/execution/legion/future.h"
+#include "flecsi/execution/legion/future_policy.h"
 #include "flecsi/execution/legion/runtime_state.h"
 #include "flecsi/execution/legion/task_wrapper.h"
 #include "flecsi/execution/legion/init_args.h"
@@ -62,7 +62,7 @@ struct legion_execution_policy_t
   //--------------------------------------------------------------------------//
 
   template<typename RETURN>
-  using future__ = legion_future__<RETURN>;
+  using future__ = legion_future_policy__<RETURN>;
 
 #if 0
   //--------------------------------------------------------------------------//
@@ -269,7 +269,7 @@ struct legion_execution_policy_t
       // Reset the calling state to false.
       context_.unset_call_mpi(legion_context, legion_runtime);
 
-      return legion_future__<RETURN>(future);
+      return legion_future_policy__<RETURN>(future);
     }
     else {
       // Initialize the arguments to pass through the runtime.
@@ -313,7 +313,7 @@ struct legion_execution_policy_t
             task_epilog(legion_runtime, legion_context);
           task_epilog.walk(task_args);
 
-          return legion_future__<RETURN>(future);
+          return legion_future_policy__<RETURN>(future);
           } // scope
 
         case launch_type_t::index:
@@ -343,7 +343,7 @@ struct legion_execution_policy_t
           auto future = legion_runtime->execute_index_space(legion_context,
             index_launcher);
 
-          return legion_future__<RETURN>(future);
+          return legion_future_policy__<RETURN>(future);
           } // scope
 
         default:

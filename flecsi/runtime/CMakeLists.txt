@@ -13,6 +13,7 @@ set(runtime_HEADERS
   flecsi_runtime_data_policy.h
   flecsi_runtime_topology_policy.h
   flecsi_runtime_set_topology_policy.h
+  flecsi_runtime_future_policy.h
   types.h
   PARENT_SCOPE
 )

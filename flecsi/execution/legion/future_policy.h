@@ -12,8 +12,8 @@
  * All rights reserved
  *~--------------------------------------------------------------------------~*/
 
-#ifndef flecsi_execution_legion_future_h
-#define flecsi_execution_legion_future_h
+#ifndef flecsi_execution_legion_future_policy_h
+#define flecsi_execution_legion_future_policy_h
 
 //----------------------------------------------------------------------------//
 //! \file
@@ -326,7 +326,7 @@ private:
 template<
   typename RETURN
 >
-struct legion_future__
+struct legion_future_policy__
 {
 
   //--------------------------------------------------------------------------//
@@ -340,7 +340,7 @@ struct legion_future__
   template<
     typename FUTURE
   >
-  legion_future__(
+  legion_future_policy__(
     const FUTURE & future
   )
   :
@@ -354,7 +354,7 @@ struct legion_future__
   //! @param lf The legion_future__ to use to set our state.
   //--------------------------------------------------------------------------//
 
-  legion_future__(const legion_future__ & lf)
+  legion_future_policy__(const legion_future_policy__ & lf)
     : state_(lf.state_) {}
 
   //--------------------------------------------------------------------------//
@@ -363,9 +363,9 @@ struct legion_future__
   //! @param lf The legion_future__ to use to set our state.
   //--------------------------------------------------------------------------//
 
-  legion_future__ &
+  legion_future_policy__ &
   operator = (
-    const legion_future__ & lf
+    const legion_future_policy__ & lf
   )
   {
     state_ = lf.state_;
@@ -414,7 +414,7 @@ private:
 
   std::shared_ptr<legion_future_concept__<RETURN>> state_;
 
-}; // struct legion_future__
+}; // struct legion_future_policy__
 
 //----------------------------------------------------------------------------//
 //! Legion future type. Explicit specialization for void.
@@ -423,7 +423,7 @@ private:
 //----------------------------------------------------------------------------//
 
 template<>
-struct legion_future__<void>
+struct legion_future_policy__<void>
 {
 
   //--------------------------------------------------------------------------//
@@ -435,7 +435,7 @@ struct legion_future__<void>
   //--------------------------------------------------------------------------//
 
   template<typename FUTURE>
-  legion_future__(const FUTURE & future)
+  legion_future_policy__(const FUTURE & future)
     : state_(new legion_future_model__<void, FUTURE>(future)) {}
 
   //--------------------------------------------------------------------------//
@@ -449,12 +449,12 @@ struct legion_future__<void>
 
   std::shared_ptr<legion_future_concept__<void>> state_;
 
-}; // struct legion_future__
+}; // struct legion_future_policy__
 
 } // namespace execution 
 } // namespace flecsi
 
-#endif // flecsi_execution_legion_future_h
+#endif // flecsi_execution_legion_future_policy_h
 
 /*~-------------------------------------------------------------------------~-*
  * Formatting options
