@@ -72,8 +72,8 @@ void driver(int argc, char ** argv) {
   auto f = flecsi_execute_task(task1, single, 0.0);
   double tmp = f.get();
   std::cout<<"future from driver = "<< tmp <<std::endl;
-//  flecsi_execute_task(task2, single, f);
-
+  auto f2 = flecsi_execute_task(task2, single, f);
+  f2.wait();
 } // driver
 
 } // namespace execution
