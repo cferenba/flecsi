@@ -193,6 +193,23 @@ cinch_add_unit(simple_task
   )
 
 
+  cinch_add_devel_target(devel_future
+      SOURCES
+        test/devel_future.cc
+        ${DRIVER_INITIALIZATION}
+        ${RUNTIME_DRIVER}
+      INPUTS
+      LIBRARIES
+        flecsi
+        ${CINCH_RUNTIME_LIBRARIES}
+      DEFINES
+        -DFLECSI_ENABLE_SPECIALIZATION_TLT_INIT
+        -DFLECSI_ENABLE_SPECIALIZATION_SPMD_INIT
+        -DCINCH_OVERRIDE_DEFAULT_INITIALIZATION_DRIVER
+      POLICY ${UNIT_POLICY}
+    )
+
+
 if(ENABLE_COLORING AND ENABLE_PARMETIS)
 
     cinch_add_devel_target(execution_structure

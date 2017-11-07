@@ -159,6 +159,8 @@ struct task_model__
 
 #include "flecsi/runtime/flecsi_runtime_execution_policy.h"
 
+#include "flecsi/runtime/flecsi_runtime_future_policy.h"
+
 namespace flecsi {
 namespace execution {
 
@@ -209,7 +211,7 @@ using task_model_t = task_model__<FLECSI_RUNTIME_EXECUTION_POLICY>;
 //----------------------------------------------------------------------------//
 
 template<typename RETURN>
-using future__ = FLECSI_RUNTIME_EXECUTION_POLICY::future__<RETURN>;
+using future__ = FLECSI_RUNTIME_FUTURE_TYPE<RETURN>;
 
 //----------------------------------------------------------------------------//
 // Static verification of public future interface for type defined by
