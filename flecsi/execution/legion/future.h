@@ -67,6 +67,17 @@ struct legion_future_concept__
     Legion::Context ctx,
     Legion::DynamicCollective& dc_reduction) = 0;
 
+  //-------------------------------------------------------------------------//
+  //! Add Legion::Future to the task
+  //-------------------------------------------------------------------------//
+  virtual void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)=0;
+
+  virtual void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)=0;
+
 }; // struct legion_future_concept__
 
 //----------------------------------------------------------------------------//
@@ -155,6 +166,24 @@ struct legion_future_model__ : public legion_future_concept__<RETURN>
       legion_future_);
   } // defer_dynamic_collective_arrival
 
+  //-------------------------------------------------------------------------//
+  //! Add Legion Future to the task launcher
+  //------------------------------------------------------------------------//
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)
+  {
+    launcher.add_future(legion_future_);
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)
+  {
+    launcher.add_future(legion_future_);
+  }
+
+
 private:
 
   FUTURE legion_future_;
@@ -200,6 +229,20 @@ struct legion_future_model__<void, FUTURE>
     Legion::DynamicCollective& dc_reduction)
   {
     // reduction of a void is still void
+  }
+
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)
+  {
+    launcher.add_future(legion_future_);
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)
+  {
+    launcher.add_future(legion_future_);
   }
 
 private:
@@ -269,6 +312,21 @@ struct legion_future_model__<RETURN, Legion::FutureMap>
     // Not sure what reducing a map with other maps would mean
   }
 
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)
+  {
+    assert( false &&"you can't pass future handle from index task to any task");
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)
+  {
+    assert( false &&"you can't pass future handle from index task to any task");
+  }
+
+
 private:
 
   Legion::FutureMap legion_future_;
@@ -304,6 +362,21 @@ struct legion_future_model__<void, Legion::FutureMap>
   {
     legion_future_.wait_all_results(silence_warnings);
   } // wait
+
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)
+  {
+    assert( false &&"you can't pass future handle from index task to any task");
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)
+  {
+    assert( false &&"you can't pass future handle from index task to any task");
+  }
+
 
 private:
 
@@ -406,6 +479,21 @@ struct legion_future__
   {
     state_->defer_dynamic_collective_arrival(runtime, ctx, dc_reduction);
   } // defer_dynamic_collective_arrival
+
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher)
+  {
+    state_->add_future_to_single_task_launcher(launcher);
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher)
+  {
+    state_->add_future_to_index_task_launcher(launcher);
+  }
+
 
 private:
 
