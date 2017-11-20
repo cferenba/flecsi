@@ -6,6 +6,7 @@
 #ifndef flecsi_future_handle_h
 #define flecsi_future_handle_h
 
+
 //----------------------------------------------------------------------------//
 //! @file
 //! @date Initial file creation: Aug 01, 2016
@@ -34,11 +35,12 @@ struct future_handle_base_t {};
 
 template<
   typename T,
-  typename FUTURE_POLICY
+  typename FUTURE_POLICY,
+   template<typename> typename FUTURE_TYPE
 >
 struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t {
 
-  using typename FUTURE_POLICY::future_type__;
+  //using typename FUTURE_POLICY::future_type__;
 //  using typename FUTURE_POLICY::task_future_type__;
 
   //--------------------------------------------------------------------------//
@@ -53,35 +55,26 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
   //--------------------------------------------------------------------------//
 
   future_handle_base__(const future_handle_base__& b)
-  : FUTURE_POLICY(b)
   {
     future=b.future;
   }
 
-  template< template<typename> typename C>
   future_handle_base__
   operator = (
-    const C<T>  &other
+     const FUTURE_TYPE<T> &other
   )
   {
-     //FIXME
-     Legion::Future ff;
-     future = &ff;
-  //   future = other.raw_future();
-   //  return future;
+     future=&other;
   }
 
-/*  future_handle_base__ (
-  const future_type__ other
+  future_handle_base__ (
+    const FUTURE_TYPE<T> &other
   )
   {
-    //FIXME
-     //future = other;
-   //  return future;
+    future=&other;
   }
-*/
 
-   future_type__ *future;
+   const FUTURE_TYPE<T> *future;
    future_id_t fid;  
 
 };
@@ -89,9 +82,11 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
 } // namespace data
 } // namespace flecsi
 
+
 #include "flecsi/runtime/flecsi_runtime_future_handle_policy.h"
 
 namespace flecsi {
+
   
 //----------------------------------------------------------------------------//
 //! The data_handle__ type is the high-level data handle type.
@@ -107,7 +102,8 @@ template<
 >
 using future_handle__ = data::future_handle_base__<
   T,
-  FLECSI_RUNTIME_FUTURE_HANDLE_POLICY
+  FLECSI_RUNTIME_FUTURE_HANDLE_POLICY,
+  FLECSI_FUTURE_TYPE
 >;
 
 template<

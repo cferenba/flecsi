@@ -222,16 +222,15 @@ namespace execution {
     ///
     // Initialize arguments for future handle
     ///
-    template<
-      typename T
-    >
+//    template<
+//      typename T
+//    >
     void
     handle(
-      future_handle__<T> & h
+      future_base_t & h
     )
     {
-     //FIXME
-     //if PERMISSIONS=READ_ONLY or READ_wRITE add future to futures
+      futures.push_back(&h);
     }
 
     //-----------------------------------------------------------------------//
@@ -252,7 +251,8 @@ namespace execution {
     Legion::Runtime * runtime;
     Legion::Context & context;
     std::vector<Legion::RegionRequirement> region_reqs;
-    std::vector<Legion::Future> futures;
+    //std::vector<Legion::Future> futures;
+    std::vector<future_base_t*> futures;
 
   }; // struct init_args_t
 

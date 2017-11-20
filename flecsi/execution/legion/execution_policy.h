@@ -297,7 +297,8 @@ struct legion_execution_policy_t
           }
 
           for(auto& future : init_args.futures){
-            task_launcher.add_future(future);
+            //task_launcher.add_future(future);
+            future->add_future_to_single_task_launcher(task_launcher);
           }
 
           // Enqueue the prolog.

@@ -35,12 +35,16 @@
 #elif FLECSI_RUNTIME_MODEL == FLECSI_RUNTIME_MODEL_legion
 
   #include "flecsi/data/legion/future_policy.h"
+  //#include "flecsi/execution/legion/future.h"
 
   namespace flecsi {
 
   using FLECSI_RUNTIME_FUTURE_HANDLE_POLICY =
       data::legion_future_handle_policy_t;
-  
+
+  template <typename T>
+  using FLECSI_FUTURE_TYPE=flecsi::execution::legion_future__<T>; 
+ 
   }
 
 // MPI Policy
