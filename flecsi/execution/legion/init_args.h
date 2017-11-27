@@ -222,16 +222,21 @@ namespace execution {
     ///
     // Initialize arguments for future handle
     ///
-//    template<
-//      typename T
-//    >
+    template<
+      typename T
+    >
     void
     handle(
-      future_base_t & h
+       future_handle__<T> & h
     )
     {
-      futures.push_back(&h);
+
+std::cout <<"IRINA DEBUG1 "<<std::endl;
+     future_base_t *f=h.future;
+     futures.push_back(f);    
+//futures.push_back(h.future);
     }
+
 
     //-----------------------------------------------------------------------//
     // If this is not a data handle, then simply skip it.

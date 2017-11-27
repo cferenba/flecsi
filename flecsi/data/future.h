@@ -120,8 +120,8 @@ struct future_data__
 
     f.fid = future_info.fid;
 
+std::cout <<"IRINA DEBUG inside get_future" <<std::endl;
   return f;
-
   } // get_future
 
 }; // struct future_data__

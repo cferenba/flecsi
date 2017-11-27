@@ -34,7 +34,7 @@ void future_handle_dump(handle_t<double> x) {
 }
 
 
-double writer( int something) {
+double writer( double something) {
   clog(info) << "writer write" << std::endl;
   double x = 3.14;
   return x;
@@ -88,9 +88,10 @@ void driver(int argc, char ** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  auto future = flecsi_get_future_handle(ns, pressure, double, 0);
+  future_handle_t<double> future = flecsi_get_future_handle(ns, pressure, double, 0);
+  future = flecsi_execute_task(writer, single, 0.0);
   flecsi_execute_task(future_handle_dump, single, future);
-  future = flecsi_execute_task(writer, single, 0);
+  //future = flecsi_execute_task(writer, single, 0);
 
 #if 0
   flecsi_execute_task(data_handle_dump, single, future);

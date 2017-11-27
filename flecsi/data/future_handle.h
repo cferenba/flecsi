@@ -74,7 +74,16 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
     future=&other;
   }
 
+ // FUTURE_TYPE<T>
+ // flecsi_future()
+ // {
+ //   return
+ // } 
+
+   //private:
    const FUTURE_TYPE<T> *future;
+   //future_base_t * future;
+//   const FUTURE_TYPE *future;
    future_id_t fid;  
 
 };

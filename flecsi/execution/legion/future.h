@@ -214,7 +214,7 @@ private:
 
 template<typename FUTURE>
 struct legion_future_model__<void, FUTURE>
-  : public legion_future_concept__<void>
+  : public legion_future_concept__<void>,  public future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -353,7 +353,7 @@ private:
 
 template<>
 struct legion_future_model__<void, Legion::FutureMap>
-  : public legion_future_concept__<void>
+  : public legion_future_concept__<void>, public future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -413,7 +413,7 @@ private:
 template<
   typename RETURN
 >
-struct legion_future__
+struct legion_future__ : future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -525,7 +525,7 @@ private:
 //----------------------------------------------------------------------------//
 
 template<>
-struct legion_future__<void>
+struct legion_future__<void> 
 {
 
   //--------------------------------------------------------------------------//
