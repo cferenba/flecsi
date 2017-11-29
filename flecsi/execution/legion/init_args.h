@@ -230,11 +230,8 @@ namespace execution {
        future_handle__<T> & h
     )
     {
-
-std::cout <<"IRINA DEBUG1 "<<std::endl;
-     future_base_t *f=h.future;
-     futures.push_back(f);    
-//futures.push_back(h.future);
+     //const legion_future__<T> *f=h.future;
+     futures.push_back(h.future);    
     }
 
 
@@ -256,8 +253,7 @@ std::cout <<"IRINA DEBUG1 "<<std::endl;
     Legion::Runtime * runtime;
     Legion::Context & context;
     std::vector<Legion::RegionRequirement> region_reqs;
-    //std::vector<Legion::Future> futures;
-    std::vector<future_base_t*> futures;
+    std::vector<const future_base_t*> futures;
 
   }; // struct init_args_t
 

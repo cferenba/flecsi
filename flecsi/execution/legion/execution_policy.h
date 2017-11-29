@@ -295,9 +295,7 @@ struct legion_execution_policy_t
           for(auto& req : init_args.region_reqs){
             task_launcher.add_region_requirement(req);
           }
-
           for(auto& future : init_args.futures){
-            //task_launcher.add_future(future);
             future->add_future_to_single_task_launcher(task_launcher);
           }
 

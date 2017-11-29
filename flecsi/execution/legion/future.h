@@ -32,12 +32,11 @@ struct future_base_t{
 //    virtual ~future_base_t() = 0;
   virtual void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)=0;
+    Legion::TaskLauncher& launcher) const=0;
 
   virtual void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)=0;
-
+    Legion::IndexLauncher& launcher) const=0;
 };
 
 //----------------------------------------------------------------------------//
@@ -85,11 +84,11 @@ struct legion_future_concept__ : public future_base_t
   //-------------------------------------------------------------------------//
   virtual void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)=0;
+    Legion::TaskLauncher& launcher) const = 0;
 
   virtual void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)=0;
+    Legion::IndexLauncher& launcher) const = 0;
 
 }; // struct legion_future_concept__
 
@@ -184,15 +183,14 @@ struct legion_future_model__ : public legion_future_concept__<RETURN>
   //------------------------------------------------------------------------//
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
-std::cout<<"IRINA DEBUG inside add_future"<<std::endl;
     launcher.add_future(legion_future_);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
@@ -247,14 +245,14 @@ struct legion_future_model__<void, FUTURE>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
@@ -328,14 +326,14 @@ struct legion_future_model__<RETURN, Legion::FutureMap>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
@@ -379,14 +377,14 @@ struct legion_future_model__<void, Legion::FutureMap>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
@@ -496,14 +494,14 @@ struct legion_future__ : future_base_t
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     state_->add_future_to_single_task_launcher(launcher);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     state_->add_future_to_index_task_launcher(launcher);
   }

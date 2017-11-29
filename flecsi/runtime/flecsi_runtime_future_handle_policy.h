@@ -42,10 +42,10 @@
   using FLECSI_RUNTIME_FUTURE_HANDLE_POLICY =
       data::legion_future_handle_policy_t;
 
-//  template <typename T>
-//  using FLECSI_FUTURE_TYPE=flecsi::execution::legion_future__<T>; 
-    template <typename T>
-    using FLECSI_FUTURE_TYPE=flecsi::execution::future_base_t; 
+  template <typename T>
+  using FLECSI_FUTURE_TYPE=flecsi::execution::legion_future__<T>; 
+//    template <typename T>
+//    using FLECSI_FUTURE_TYPE=flecsi::execution::future_base_t; 
 
   }
 
