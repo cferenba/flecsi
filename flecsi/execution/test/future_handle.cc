@@ -30,7 +30,7 @@ using handle_t = future_handle_t<T>;
 
 
 void future_handle_dump(handle_t<double> x) {
- double tmp = x.data;
+ double tmp = x.data();
   std::cout << "future_handle =  " << tmp << std::endl;
 }
 
@@ -91,7 +91,7 @@ void driver(int argc, char ** argv) {
   future=f;
   flecsi_execute_task(future_handle_dump, single, future);
 
-std::cout<<"IRINA DEBUG2"<<future.data<<std::endl;
+//std::cout<<"IRINA DEBUG2"<<future.data<<std::endl;
 #if 0
   flecsi_execute_task(data_handle_dump, single, future);
   flecsi_execute_task(exclusive_writer, single, future);

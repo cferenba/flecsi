@@ -56,7 +56,9 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
 
   future_handle_base__(const future_handle_base__& b)
   {
-    future=b.future;
+    future_=b.future_;
+    data_=b.data_;
+    fid_=b.fid_;
   }
 
   future_handle_base__
@@ -64,19 +66,29 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
      const FUTURE_TYPE<T> &other
   )
   {
-     future=&other;
+     future_=&other;
   }
 
   future_handle_base__ (
     const FUTURE_TYPE<T> &other
   )
   {
-    future=&other;
+    future_=&other;
   }
 
-   const FUTURE_TYPE<T> *future;
-   future_id_t fid;  
-   T data=0;
+  T data()
+  {
+    return data_;
+  }
+
+  future_id_t fid()
+  {
+    return fid_;
+  }
+
+   const FUTURE_TYPE<T> *future_;
+   future_id_t fid_;  
+   T data_;
 
 };
 

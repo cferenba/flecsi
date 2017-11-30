@@ -231,7 +231,7 @@ namespace execution {
     )
     {
      //const legion_future__<T> *f=h.future;
-     futures.push_back(h.future);    
+     futures.push_back(h.future_);    
     }
 
 

@@ -287,7 +287,7 @@ struct init_handles_t : public utils::tuple_walker__<init_handles_t>
      future_handle__<T> & h
   )
   {
-   h.data =  Legion::Future(futures[future_id]).get_result<T>();
+   h.data_ =  Legion::Future(futures[future_id]).get_result<T>();
    future_id++;
   }//handle
 

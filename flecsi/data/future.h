@@ -118,7 +118,7 @@ struct future_data__
  
     auto& future_info =  context.get_future_info(key);
 
-    f.fid = future_info.fid;
+    f.fid_ = future_info.fid;
 
   return f;
   } // get_future
