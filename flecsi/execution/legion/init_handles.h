@@ -32,6 +32,7 @@
 #include "flecsi/topology/mesh_types.h"
 #include "flecsi/topology/mesh_topology.h"
 #include "flecsi/topology/set_topology.h"
+#include "flecsi/data/future_handle.h"
 
 namespace flecsi {
 namespace execution {
@@ -57,13 +58,16 @@ struct init_handles_t : public utils::tuple_walker__<init_handles_t>
   init_handles_t(
     Legion::Runtime* runtime,
     Legion::Context& context,
-    const std::vector<Legion::PhysicalRegion>& regions
+    const std::vector<Legion::PhysicalRegion>& regions,
+    const std::vector<Legion::Future>& futures
   )
   :
     runtime(runtime),
     context(context),
     regions(regions),
-    region(0)
+    futures(futures),
+    region(0),
+    future_id(0)
   {
   } // init_handles
 
@@ -272,6 +276,22 @@ struct init_handles_t : public utils::tuple_walker__<init_handles_t>
 
   } // handle
 
+  ///
+  // Initialize arguments for future handle
+  ///
+  template<
+    typename T
+  >
+  void
+  handle(
+     future_handle__<T> & h
+  )
+  {
+   h.data =  Legion::Future(futures[future_id]).get_result<T>();
+   future_id++;
+  }//handle
+
+
   template<
     typename T,
     size_t PERMISSIONS
@@ -459,7 +479,8 @@ struct init_handles_t : public utils::tuple_walker__<init_handles_t>
   Legion::Runtime * runtime;
   Legion::Context & context;
   const std::vector<Legion::PhysicalRegion> & regions;
-  size_t region;
+  const std::vector<Legion::Future> & futures;
+  size_t region, future_id;
 }; // struct init_handles_t
 
 } // namespace execution 

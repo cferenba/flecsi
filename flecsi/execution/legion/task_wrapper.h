@@ -307,7 +307,7 @@ struct task_wrapper__
     context_t::instance().push_state(KEY, context, runtime, task, regions);
 #endif
 
-    init_handles_t init_handles(runtime, context, regions);
+    init_handles_t init_handles(runtime, context, regions, task->futures);
     init_handles.walk(task_args);
 
     // Execute the user's task

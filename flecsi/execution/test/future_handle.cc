@@ -30,7 +30,8 @@ using handle_t = future_handle_t<T>;
 
 
 void future_handle_dump(handle_t<double> x) {
-//  clog(info) << "future_handle =  " << x << std::endl;
+ double tmp = x.data;
+  std::cout << "future_handle =  " << tmp << std::endl;
 }
 
 
@@ -66,9 +67,6 @@ void specialization_tlt_init(int argc, char ** argv) {
   ASSERT_EQ(context.execution_state(),
     static_cast<size_t>(SPECIALIZATION_TLT_INIT));
 
-//  auto future = flecsi_get_future_handle(ns, pressure, double, 0);
-//  flecsi_execute_task(future_handle_dump, single, future);
-//  future = flecsi_execute_task(writer, single, 0);
 #if 0
   flecsi_execute_task(reader, single, future);
 #endif
@@ -90,10 +88,10 @@ void driver(int argc, char ** argv) {
 
   future_handle_t<double> future = flecsi_get_future_handle(ns, pressure, double, 0);
   auto f  = flecsi_execute_task(writer, single, 0.0);
-  int i=2;
   future=f;
   flecsi_execute_task(future_handle_dump, single, future);
 
+std::cout<<"IRINA DEBUG2"<<future.data<<std::endl;
 #if 0
   flecsi_execute_task(data_handle_dump, single, future);
   flecsi_execute_task(exclusive_writer, single, future);
