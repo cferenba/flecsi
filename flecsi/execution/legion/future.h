@@ -27,6 +27,11 @@
 namespace flecsi {
 namespace execution {
 
+//----------------------------------------------------------------------------//
+// Future abstract base class (need it to store pointers to legion futures 
+// passed to the task)
+//----------------------------------------------------------------------------//
+
 struct future_base_t{
   public:
 //    virtual ~future_base_t() = 0;
@@ -454,6 +459,7 @@ struct legion_future__ : future_base_t
   )
   {
     state_ = lf.state_;
+    return *this;
   } // operator =
 
   //--------------------------------------------------------------------------//

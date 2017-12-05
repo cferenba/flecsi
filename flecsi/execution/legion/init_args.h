@@ -253,7 +253,7 @@ namespace execution {
     Legion::Runtime * runtime;
     Legion::Context & context;
     std::vector<Legion::RegionRequirement> region_reqs;
-    std::vector<const future_base_t*> futures;
+    std::vector<std::shared_ptr<future_base_t>> futures;
 
   }; // struct init_args_t
 

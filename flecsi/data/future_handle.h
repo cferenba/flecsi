@@ -38,17 +38,18 @@ template<
   typename FUTURE_POLICY,
    template<typename> typename FUTURE_TYPE
 >
-struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t {
-
-  //using typename FUTURE_POLICY::future_type__;
-//  using typename FUTURE_POLICY::task_future_type__;
+struct future_handle_base__ : public FUTURE_POLICY,
+  public future_handle_base_t {
 
   //--------------------------------------------------------------------------//
   //! Default constructor.
   //--------------------------------------------------------------------------//
 
-  future_handle_base__()
-  {}
+  future_handle_base__() : future_(nullptr), data_(0),fid_(0)
+  {
+  }
+
+  ~future_handle_base__() {}
 
   //--------------------------------------------------------------------------//
   //! Copy constructor.
@@ -61,19 +62,20 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
     fid_=b.fid_;
   }
 
-  future_handle_base__
+  future_handle_base__ &
   operator = (
      const FUTURE_TYPE<T> &other
   )
   {
-     future_=&other;
+     future_=std::make_shared<FUTURE_TYPE<T>>(other);
+     return *this;
   }
 
-  future_handle_base__ (
+  future_handle_base__   (
     const FUTURE_TYPE<T> &other
   )
   {
-    future_=&other;
+    future_=std::make_shared<FUTURE_TYPE<T>>(other);
   }
 
   T data()
@@ -86,7 +88,7 @@ struct future_handle_base__ : public FUTURE_POLICY, public future_handle_base_t 
     return fid_;
   }
 
-   const FUTURE_TYPE<T> *future_;
+   std::shared_ptr<FUTURE_TYPE<T>> future_;
    future_id_t fid_;  
    T data_;
 

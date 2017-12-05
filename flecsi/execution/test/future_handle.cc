@@ -29,7 +29,7 @@ template<typename T>
 using handle_t = future_handle_t<T>;
 
 
-void future_handle_dump(handle_t<double> x) {
+void future_handle_dump(future_handle_t<double> x) {
  double tmp = x.data();
   std::cout << "future_handle =  " << tmp << std::endl;
 }
@@ -41,10 +41,10 @@ double writer( double something) {
   return x;
 }
 
-void reader(future_handle_t<double> x) {
+void reader(future_handle_t<double> x, future_handle_t<double> y) {
   clog(info) << "reader read: " << std::endl;
-//  ASSERT_EQ(x, static_cast<double>(3.14));
-  
+  ASSERT_EQ(x.data(), static_cast<double>(3.14));
+  ASSERT_EQ(x.data(),y.data());
 }
 
 flecsi_register_task(writer, loc, single);
@@ -87,17 +87,9 @@ void driver(int argc, char ** argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   future_handle_t<double> future = flecsi_get_future_handle(ns, pressure, double, 0);
-  auto f  = flecsi_execute_task(writer, single, 0.0);
-  future=f;
+  future  = flecsi_execute_task(writer, single, 0.0);
   flecsi_execute_task(future_handle_dump, single, future);
-
-//std::cout<<"IRINA DEBUG2"<<future.data<<std::endl;
-#if 0
-  flecsi_execute_task(data_handle_dump, single, future);
-  flecsi_execute_task(exclusive_writer, single, future);
-  flecsi_execute_task(exclusive_reader, single, future);
-#endif
-
+  flecsi_execute_task(reader, single, future, future);
 } // driver
 
 //----------------------------------------------------------------------------//
