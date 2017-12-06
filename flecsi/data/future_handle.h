@@ -45,7 +45,7 @@ struct future_handle_base__ : public FUTURE_POLICY,
   //! Default constructor.
   //--------------------------------------------------------------------------//
 
-  future_handle_base__() : future_(nullptr), data_(0),fid_(0)
+  future_handle_base__() : future_(nullptr), data_(0)
   {
   }
 
@@ -59,7 +59,6 @@ struct future_handle_base__ : public FUTURE_POLICY,
   {
     future_=b.future_;
     data_=b.data_;
-    fid_=b.fid_;
   }
 
   future_handle_base__ &
@@ -83,13 +82,7 @@ struct future_handle_base__ : public FUTURE_POLICY,
     return data_;
   }
 
-  future_id_t fid()
-  {
-    return fid_;
-  }
-
    std::shared_ptr<FUTURE_TYPE<T>> future_;
-   future_id_t fid_;  
    T data_;
 
 };

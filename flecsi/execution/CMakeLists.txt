@@ -28,7 +28,6 @@ set(execution_HEADERS
   function.h
   kernel.h
   task.h
-  future.h
 )
 
 set(DRIVER_INITIALIZATION driver_initialization.cc)

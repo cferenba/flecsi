@@ -85,35 +85,12 @@ struct context__ : public CONTEXT_POLICY
   }; // struct field_info_t
 
   //--------------------------------------------------------------------------//
-  // Gathers info about registered futures.
-  //--------------------------------------------------------------------------//
-
-  struct future_info_t{
-    size_t size;
-    size_t namespace_hash;
-    size_t name_hash;
-    size_t versions;
-    future_id_t fid;
-    size_t key;
-  }; // struct future_info_t
-
-  //--------------------------------------------------------------------------//
   // Field info map for fields in SPMD task, key1 =
   // (data client hash, index space), key2 = fid
   //--------------------------------------------------------------------------//
 
   using field_info_map_t =
     std::map<std::pair<size_t, size_t>, std::map<field_id_t, field_info_t>>;
-
-  //--------------------------------------------------------------------------//
-  // Future info map for futures in SPMD task , key = future id
-  //--------------------------------------------------------------------------/
-  using future_info_map_t = 
-    std::map< future_id_t, future_info_t>;
-
-  //--------------------------------------------------------------------------//
-  // Function interface.
-  //--------------------------------------------------------------------------//
 
   //--------------------------------------------------------------------------//
   //! FIXME: This interface needs to be updated.

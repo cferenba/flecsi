@@ -50,7 +50,6 @@ void reader(future_handle_t<double> x, future_handle_t<double> y) {
 flecsi_register_task(writer, loc, single);
 flecsi_register_task(reader, loc, single);
 flecsi_register_task(future_handle_dump, loc, single);
-flecsi_register_future( ns, pressure, double, 1);
 
 namespace flecsi {
 namespace execution {
@@ -86,8 +85,7 @@ void driver(int argc, char ** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  future_handle_t<double> future = flecsi_get_future_handle(ns, pressure, double, 0);
-  future  = flecsi_execute_task(writer, single, 0.0);
+  future_handle_t<double> future  = flecsi_execute_task(writer, single, 0.0);
   flecsi_execute_task(future_handle_dump, single, future);
   flecsi_execute_task(reader, single, future, future);
 } // driver
