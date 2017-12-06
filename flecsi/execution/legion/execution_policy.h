@@ -291,15 +291,12 @@ struct legion_execution_policy_t
 #ifdef MAPPER_COMPACTION
          task_launcher.tag=MAPPER_COMPACTED_STORAGE;
 #endif
-          //add region requirements for all data handles
+
           for(auto& req : init_args.region_reqs){
             task_launcher.add_region_requirement(req);
           }
-    
-          //add futures to the launcher
-          for(auto& f : init_args.futures){
-//FIXME
-//            f.add_future_to_task(task_launcher);
+          for(auto& future : init_args.futures){
+            future->add_future_to_single_task_launcher(task_launcher);
           }
 
           // Enqueue the prolog.

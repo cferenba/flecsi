@@ -25,10 +25,9 @@
 #include "legion.h"
 
 #include "flecsi/execution/common/execution_state.h"
-#include "flecsi/execution/legion/future.h"
 #include "flecsi/data/common/privilege.h"
 #include "flecsi/data/data_client_handle.h"
-#include "flecsi/utils/any.h"
+
 
 namespace flecsi {
 namespace execution {
@@ -44,9 +43,6 @@ namespace execution {
 
   struct init_args_t : public utils::tuple_walker__<init_args_t>
   {
-
-    template<typename RETURN>
-    using future__ = legion_future__<RETURN>;
 
     //------------------------------------------------------------------------//
     //! Construct an init_args_t instance.
@@ -222,17 +218,19 @@ namespace execution {
       }
     } // handle
 
-    //----------------------------------------------------------------------//
-    //FIXME
-    //----------------------------------------------------------------------//
+    ///
+    // Initialize arguments for future handle
+    ///
     template<
       typename T
     >
     void
-    future(future__ <T> & h)
+    handle(
+       legion_future__<T> & h
+    )
     {
-      futures.push_back(flecsi::utils::any_t(h));
-    }//
+     futures.push_back(std::make_shared<legion_future__<T>>(h));    
+    }
 
 
     //-----------------------------------------------------------------------//
@@ -253,7 +251,7 @@ namespace execution {
     Legion::Runtime * runtime;
     Legion::Context & context;
     std::vector<Legion::RegionRequirement> region_reqs;
-    std::vector<flecsi::utils::any_t> futures;
+    std::vector<std::shared_ptr<future_base_t>> futures;
 
   }; // struct init_args_t
 

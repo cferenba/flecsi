@@ -28,6 +28,23 @@ namespace flecsi {
 namespace execution {
 
 //----------------------------------------------------------------------------//
+// Future abstract base class (need it to store pointers to legion futures 
+// passed to the task)
+//----------------------------------------------------------------------------//
+
+struct future_base_t{
+  public:
+//    virtual ~future_base_t() = 0;
+  virtual void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher) const=0;
+
+  virtual void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher) const=0;
+};
+
+//----------------------------------------------------------------------------//
 // Future concept.
 //----------------------------------------------------------------------------//
 
@@ -40,7 +57,7 @@ namespace execution {
 template<
   typename RETURN
 >
-struct legion_future_concept__
+struct legion_future_concept__ : public future_base_t
 {
 
   virtual ~legion_future_concept__() {}
@@ -72,11 +89,11 @@ struct legion_future_concept__
   //-------------------------------------------------------------------------//
   virtual void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)=0;
+    Legion::TaskLauncher& launcher) const = 0;
 
   virtual void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)=0;
+    Legion::IndexLauncher& launcher) const = 0;
 
 }; // struct legion_future_concept__
 
@@ -171,14 +188,14 @@ struct legion_future_model__ : public legion_future_concept__<RETURN>
   //------------------------------------------------------------------------//
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
@@ -200,7 +217,7 @@ private:
 
 template<typename FUTURE>
 struct legion_future_model__<void, FUTURE>
-  : public legion_future_concept__<void>
+  : public legion_future_concept__<void>,  public future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -233,14 +250,14 @@ struct legion_future_model__<void, FUTURE>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     launcher.add_future(legion_future_);
   }
@@ -314,14 +331,14 @@ struct legion_future_model__<RETURN, Legion::FutureMap>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
@@ -339,7 +356,7 @@ private:
 
 template<>
 struct legion_future_model__<void, Legion::FutureMap>
-  : public legion_future_concept__<void>
+  : public legion_future_concept__<void>, public future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -365,14 +382,14 @@ struct legion_future_model__<void, Legion::FutureMap>
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     assert( false &&"you can't pass future handle from index task to any task");
   }
@@ -399,7 +416,7 @@ private:
 template<
   typename RETURN
 >
-struct legion_future__
+struct legion_future__ : future_base_t
 {
 
   //--------------------------------------------------------------------------//
@@ -442,6 +459,7 @@ struct legion_future__
   )
   {
     state_ = lf.state_;
+    return *this;
   } // operator =
 
   //--------------------------------------------------------------------------//
@@ -482,18 +500,24 @@ struct legion_future__
 
   void
   add_future_to_single_task_launcher(
-    Legion::TaskLauncher& launcher)
+    Legion::TaskLauncher& launcher) const
   {
     state_->add_future_to_single_task_launcher(launcher);
   }
 
   void
   add_future_to_index_task_launcher(
-    Legion::IndexLauncher& launcher)
+    Legion::IndexLauncher& launcher) const
   {
     state_->add_future_to_index_task_launcher(launcher);
   }
 
+  RETURN data()
+  {
+    return data_;
+  }
+
+  RETURN data_;
 
 private:
 
@@ -511,7 +535,7 @@ private:
 //----------------------------------------------------------------------------//
 
 template<>
-struct legion_future__<void>
+struct legion_future__<void> 
 {
 
   //--------------------------------------------------------------------------//
