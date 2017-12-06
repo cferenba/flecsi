@@ -59,7 +59,6 @@ runtime_driver(
   context_.wait_on_mpi(ctx, runtime);
 
   using field_info_t = context_t::field_info_t;
-  using future_info_t = context_t::future_info_t;
 
   //--------------------------------------------------------------------------//
   // Invoke callbacks for entries in the client registry.
@@ -92,15 +91,6 @@ runtime_driver(
     } // for
   } // for
 
-  auto & future_registry = 
-    flecsi::data::storage_t::instance().future_registry();
-
-  for(auto & c: future_registry) {
- //   for(auto & f: c.second) {
-      c.second.second(c.first, c.second.first);
-  } // for
-//  } // for
-
   int num_colors;
   MPI_Comm_size(MPI_COMM_WORLD, &num_colors);
   {
@@ -119,14 +109,6 @@ runtime_driver(
       number_of_global_fields++;
   }
   
-#if 0
-  auto& future_dmap = context_.future_data_map();
-  for(const future_info_t& future_info : context_.registered_futures()){
-    context_.put_future_info(future_info);
-     future_dmap[future_info.fid] = Legion::Future();
-  }
-#endif
-
   if (number_of_global_fields > 0)
   {
     auto& ispace_dmap = context_.index_space_data_map();
@@ -353,11 +335,6 @@ runtime_driver(
     args_serializers[color].serialize(&num_fields, sizeof(size_t));
     args_serializers[color].serialize(
       &context_.registered_fields()[0], num_fields * sizeof(field_info_t));
-
-    size_t num_futures = context_.registered_futures().size();
-    args_serializers[color].serialize(&num_futures, sizeof(size_t));
-    args_serializers[color].serialize(
-      &context_.registered_futures()[0], num_futures * sizeof(future_info_t));
 
     // #3 serialize pbarriers_as_owner
     args_serializers[color].serialize(&pbarriers_as_owner[0], 
@@ -648,24 +625,6 @@ spmd_task(
       context_.put_field_info(fi);
     }//end for i
   }//if
-
-  size_t num_futures;
-  args_deserializer.deserialize(&num_futures, sizeof(size_t));
-
-  using future_info_t = context_t::future_info_t;
-  auto future_info_buf = new future_info_t [num_futures];
-
-  args_deserializer.deserialize(future_info_buf,
-                                sizeof(future_info_t) * num_futures);
-
-  // add future_info into the context (map between name, hash and field)
-  if( (context_.future_info_map()).size()==0){
-    for(size_t i = 0; i < num_futures; ++i){
-      future_info_t& fi = future_info_buf[i];
-      context_.put_future_info(fi);
-    }//end for i
-  }//if
-
 
   //if there is no information about fields in the context, add it there
   if (context_.registered_fields().size()==0)

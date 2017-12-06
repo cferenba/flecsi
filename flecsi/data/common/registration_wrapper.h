@@ -81,43 +81,6 @@ struct field_registration_wrapper__
 
 }; // class field_registration_wrapper__
 
-//----------------------------------------------------------------------------//
-//!
-//----------------------------------------------------------------------------//
-
-template<
-  typename DATA_TYPE,
-  size_t NAMESPACE_HASH,
-  size_t NAME_HASH,
-  size_t VERSIONS
->
-struct future_registration_wrapper__
-{ 
-  //--------------------------------------------------------------------------//
-  //!
-  //--------------------------------------------------------------------------//
-  
-  static
-  void
-  register_callback(
-    size_t key,
-    future_id_t fid
-  ) 
-  { 
-    execution::context_t::future_info_t fi;
-    
-    fi.size = sizeof(DATA_TYPE);
-    fi.namespace_hash = NAMESPACE_HASH;
-    fi.name_hash = NAME_HASH;
-    fi.versions = VERSIONS;
-    
-    fi.fid = fid;
-    fi.key = key;
-    
-    execution::context_t::instance().register_future_info(fi);
-  } // register_callback
-
-}; // class future_registration_wrapper__
 
 //----------------------------------------------------------------------------//
 //!
