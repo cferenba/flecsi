@@ -467,8 +467,8 @@ struct legion_context_policy_t {
     @param task future
    */
 
-  template<typename T>
-  auto reduce_max(legion_future__<T> & local_future) {
+  template<typename RETURN, typename FUTURE>
+  auto reduce_max(legion_future__<RETURN, FUTURE> & local_future) {
     Legion::DynamicCollective & max_reduction = max_reduction_;
 
     auto legion_runtime = Legion::Runtime::get_runtime();
@@ -511,8 +511,8 @@ struct legion_context_policy_t {
     @param task future
    */
 
-  template<typename T>
-  auto reduce_min(legion_future__<T> & local_future) {
+  template<typename RETURN, typename FUTURE>
+  auto reduce_min(legion_future__<RETURN,FUTURE> & local_future) {
     Legion::DynamicCollective & min_reduction = min_reduction_;
 
     auto legion_runtime = Legion::Runtime::get_runtime();

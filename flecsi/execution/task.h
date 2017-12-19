@@ -124,9 +124,10 @@ using task_interface_t = task_interface__<FLECSI_RUNTIME_EXECUTION_POLICY>;
   @ingroup execution
  */
 
-template<typename RETURN>
-using future__ = FLECSI_RUNTIME_EXECUTION_POLICY::future__<RETURN>;
+template<typename RETURN, typename FUTURE>
+using future__ = FLECSI_RUNTIME_EXECUTION_POLICY::future__<RETURN, FUTURE>;
 
+#if 0
 //----------------------------------------------------------------------------//
 // Static verification of public future interface for type defined by
 // execution policy.
@@ -146,6 +147,7 @@ static_assert(
     "future type missing get method");
 
 } // namespace verify_future
+#endif
 
 } // namespace execution
 } // namespace flecsi

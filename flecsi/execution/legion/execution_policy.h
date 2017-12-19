@@ -60,8 +60,8 @@ struct legion_execution_policy_t {
     @tparam RETURN The return type of the task.
    */
 
-  template<typename RETURN>
-  using future__ = legion_future__<RETURN>;
+  template<typename RETURN, typename FUTURE>
+  using future__ = legion_future__<RETURN, FUTURE>;
 
   /*!
     The runtime_state_t type identifies a public type for the high-level
@@ -196,7 +196,8 @@ struct legion_execution_policy_t {
       // Reset the calling state to false.
       context_.unset_call_mpi(legion_context, legion_runtime);
 
-      return legion_future__<RETURN>(future);
+ // FIXME return rigt future
+ //return legion_future__<RETURN>(future);
     } else {
       // Initialize the arguments to pass through the runtime.
       init_args_t init_args(legion_runtime, legion_context);
@@ -238,7 +239,7 @@ struct legion_execution_policy_t {
           task_epilog_t task_epilog(legion_runtime, legion_context);
           task_epilog.walk(task_args);
 
-          return legion_future__<RETURN>(future);
+          return legion_future__<RETURN, Legion::Future>(future);
         } // scope
 
         case launch_type_t::index: {
@@ -267,7 +268,7 @@ struct legion_execution_policy_t {
           auto future = legion_runtime->execute_index_space(
               legion_context, index_launcher);
 
-          return legion_future__<RETURN>(future);
+          return legion_future__<RETURN, Legion::FutureMap>(future);
         } // scope
 
         default:
