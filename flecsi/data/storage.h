@@ -33,7 +33,8 @@ namespace data {
 
 //----------------------------------------------------------------------------//
 //! The storage__ type provides a high-level data model context interface that
-//! is implemented by the given storage policy.
+//! is implemented by the given storage policy. It provides an interface for
+//! client and field registration.
 //!
 //! @tparam USER_META_DATA A user-defined meta data type.
 //! @tparam STORAGE_POLICY The backend storage policy.
@@ -120,6 +121,19 @@ struct storage__ : public STORAGE_POLICY {
   bool register_client_fields(size_t client_key) {
     return registered_client_fields_.insert(client_key).second;
   }
+
+  //--------------------------------------------------------------------------//
+  //! Search for a client at the runtime.
+  //!
+  //! @param client_key The data client indentifier hash.
+  //--------------------------------------------------------------------------//
+
+  void assert_client_exists(size_t client_key) {
+    clog_assert( client_registry_.find(client_key) != client_registry_.end(),
+        "\nThe data_client you are trying to access with key " << 
+        client_key << " does not exist!" <<
+        "\nMake sure it has been properly registered!" );
+  } // register_client
 
   //--------------------------------------------------------------------------//
   //! Myer's singleton instance.

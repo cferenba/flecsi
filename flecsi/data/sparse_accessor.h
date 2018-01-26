@@ -17,6 +17,8 @@
 
 #include <unordered_set>
 
+#include <cinchlog.h>
+
 #include <flecsi/data/sparse_data_handle.h>
 #include <flecsi/topology/index_space.h>
 
@@ -24,8 +26,7 @@ namespace flecsi {
 
 //----------------------------------------------------------------------------//
 //! The sparse_accessor_base_t type provides an empty base type for
-//! compile-time
-//! identification of data handle objects.
+//! compile-time identification of data handle objects.
 //!
 //! @ingroup data
 //----------------------------------------------------------------------------//
@@ -34,7 +35,9 @@ struct sparse_accessor_base_t {};
 
 //----------------------------------------------------------------------------//
 //! The sparse accessor__ type captures information about permissions
-//! and specifies a data policy.
+//! and specifies a data policy. It provides methods for looking up
+//! a data item given an index and entry, for querying allocated indices and
+//! entries per index and over all indices.
 //!
 //! @tparam T                     The data type referenced by the handle.
 //! @tparam EXCLUSIVE_PERMISSIONS The permissions required on the exclusive

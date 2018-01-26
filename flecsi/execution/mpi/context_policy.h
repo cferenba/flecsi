@@ -192,6 +192,10 @@ struct mpi_context_policy_t
     // TODO: to be defined.
   };
 
+  struct index_subspace_data_t {
+    size_t capacity;
+  };
+
   struct local_index_space_data_t{
     size_t size;
     size_t capacity;
@@ -201,6 +205,14 @@ struct mpi_context_policy_t
   index_space_data_map()
   {
     return index_space_data_map_;
+  }
+
+  /*!
+    Get the index subspace data map.
+   */
+
+  auto & index_subspace_data_map() {
+    return index_subspace_data_map_;
   }
 
   auto&
@@ -213,7 +225,8 @@ struct mpi_context_policy_t
   using index_coloring_t = flecsi::coloring::index_coloring_t;
 
   /*!
-   FIXME documentation
+   Field metadata is used maintain MPI information and data types for
+   MPI windows/one-sided communication to perform ghost copies.
    */
   struct field_metadata_t {
 
@@ -227,7 +240,8 @@ struct mpi_context_policy_t
   };
 
   /*!
-   FIXME documentation
+   Field metadata is used maintain MPI information and data types for
+   MPI windows/one-sided communication to perform ghost copies.
    */
   struct sparse_field_metadata_t{
     MPI_Group shared_users_grp;
@@ -246,7 +260,9 @@ struct mpi_context_policy_t
   };
 
   /*!
-   FIXME documentation
+   Create MPI datatypes use for ghost copy by inspecting shared regions,
+   and ghost owners, to compute origin and target lengths and displacements
+   for MPI windows.
    */
   template <typename T>
   void register_field_metadata(const field_id_t fid,
@@ -296,7 +312,9 @@ struct mpi_context_policy_t
   }
 
   /*!
-   FIXME documentation
+   Create MPI datatypes use for ghost copy by inspecting shared regions,
+   and ghost owners, to compute origin and target lengths and displacements
+   for MPI windows.
    */
   template <typename T>
   void register_sparse_field_metadata(
@@ -357,7 +375,8 @@ struct mpi_context_policy_t
   }
 
   /*!
-   FIXME documentation
+   Compute MPI datatypes, compacted length and displacement for ghost copy
+   with MPI window.
    */
   template <typename T, typename MD>
   void register_field_metadata_(
@@ -522,7 +541,8 @@ struct mpi_context_policy_t
   };
 
   /*!
-   FIXME documentation
+   Register new field data, i.e. allocate a new buffer for the specified field
+   ID.
    */
   void register_field_data(field_id_t fid,
                            size_t size) {
@@ -537,7 +557,10 @@ struct mpi_context_policy_t
   }
 
   /*!
-   FIXME documentation
+   Register new sparse field data, i.e. allocate a new buffer for the
+   specified field ID. Sparse data consists of a buffer of offsets
+   (start + length) and entry id / value pairs and associated metadata about
+   this field. 
    */
   void register_sparse_field_data(
     field_id_t fid,
@@ -672,6 +695,7 @@ private:
 
   std::map<size_t, index_space_data_t> index_space_data_map_;
   std::map<size_t, local_index_space_data_t> local_index_space_data_map_;
+  std::map<size_t, index_subspace_data_t> index_subspace_data_map_;
 
   std::map<field_id_t, sparse_field_data_t> sparse_field_data;
   std::map<field_id_t, sparse_field_metadata_t> sparse_field_metadata;

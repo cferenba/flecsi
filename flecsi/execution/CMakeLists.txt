@@ -222,6 +222,49 @@ if(ENABLE_COLORING AND ENABLE_PARMETIS)
       POLICY ${UNIT_POLICY}
     )
 
+#    cinch_add_devel_target(index_subspaces
+#      SOURCES
+#        test/index_subspaces.cc
+#        ../supplemental/coloring/add_colorings.cc
+#        ${DRIVER_INITIALIZATION}
+#        ${RUNTIME_DRIVER}
+#      INPUTS
+#        test/simple2d-8x8.msh
+#        test/simple2d-16x16.msh
+#      LIBRARIES
+#        FleCSI
+#        ${CINCH_RUNTIME_LIBRARIES}
+#        ${COLORING_LIBRARIES}
+#      DEFINES
+#        -DFLECSI_ENABLE_SPECIALIZATION_TLT_INIT
+#        -DFLECSI_ENABLE_SPECIALIZATION_SPMD_INIT
+#        -DCINCH_OVERRIDE_DEFAULT_INITIALIZATION_DRIVER
+#        -DFLECSI_8_8_MESH
+#      POLICY ${UNIT_POLICY}
+#    )
+
+    # cinch_add_unit(forall
+    #   SOURCES
+    #     test/forall.fcc
+    #     ../supplemental/coloring/add_colorings.cc
+    #     ${DRIVER_INITIALIZATION}
+    #     ${RUNTIME_DRIVER}
+    #   INPUTS
+    #     test/simple2d-8x8.msh
+    #     test/simple2d-16x16.msh
+    #   LIBRARIES
+    #     FleCSI
+    #     ${CINCH_RUNTIME_LIBRARIES}
+    #     ${COLORING_LIBRARIES}
+    #   DEFINES
+    #     -DFLECSI_ENABLE_SPECIALIZATION_TLT_INIT
+    #     -DFLECSI_ENABLE_SPECIALIZATION_SPMD_INIT
+    #     -DCINCH_OVERRIDE_DEFAULT_INITIALIZATION_DRIVER
+    #     -DFLECSI_8_8_MESH
+    #   POLICY ${UNIT_POLICY}
+    #   NOCI
+    # )
+
     cinch_add_unit(data_handle_task
       SOURCES
         test/data_handle_task.cc
@@ -331,6 +374,24 @@ if(FLECSI_RUNTIME_MODEL STREQUAL "mpi")
     cinch_add_unit(set_topology
       SOURCES
         test/set_topology.cc
+        ${DRIVER_INITIALIZATION}
+        ${RUNTIME_DRIVER}
+      LIBRARIES
+          FleCSI
+        ${CINCH_RUNTIME_LIBRARIES}
+        ${COLORING_LIBRARIES}
+      DEFINES
+        -DFLECSI_ENABLE_SPECIALIZATION_TLT_INIT
+        -DFLECSI_ENABLE_SPECIALIZATION_SPMD_INIT
+        -DCINCH_OVERRIDE_DEFAULT_INITIALIZATION_DRIVER
+      POLICY ${UNIT_POLICY}
+      THREADS 2
+      NOCI
+      )
+
+    cinch_add_unit(particles
+      SOURCES
+        test/particles.cc
         ${DRIVER_INITIALIZATION}
         ${RUNTIME_DRIVER}
       LIBRARIES

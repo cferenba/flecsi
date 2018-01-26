@@ -161,6 +161,24 @@ struct legion_future__<void, Legion::Future> : public future_base_t {
     // reduction of a void is still void
   }
 
+  /*!
+    Add Legion Future to the task launcher
+   */
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher) const
+  {
+    launcher.add_future(legion_future_);
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher) const
+  {
+    launcher.add_future(legion_future_);
+  }
+
+
 private:
   Legion::Future legion_future_;
 }; //legion_future
@@ -260,6 +278,24 @@ struct legion_future__<void, Legion::FutureMap> : public future_base_t{
   void wait(bool silence_warnings = false) {
     legion_future_.wait_all_results(silence_warnings);
   } // wait
+
+  /*!
+    Add Legion Future to the task launcher
+   */
+  void
+  add_future_to_single_task_launcher(
+    Legion::TaskLauncher& launcher) const
+  {
+    assert( false &&"you can't pass future from index task to any task");
+  }
+
+  void
+  add_future_to_index_task_launcher(
+    Legion::IndexLauncher& launcher) const
+  {
+    assert( false &&"you can't pass future handle from index task to any task");
+  }
+
 
 private:
   Legion::FutureMap legion_future_;

@@ -35,14 +35,17 @@ struct typeify {
 template<typename T, T M>
 constexpr T typeify<T, M>::value;
 
-template<size_t M>
-using dimension_ = typeify<size_t, M>;
+template<size_t DIM>
+using dimension_ = typeify<size_t, DIM>;
 
-template<size_t M>
-using domain_ = typeify<size_t, M>;
+template<size_t DOM>
+using domain_ = typeify<size_t, DOM>;
 
-template<size_t M>
-using index_space_ = typeify<size_t, M>;
+template<size_t IS>
+using index_space_ = typeify<size_t, IS>;
+
+template<size_t ISS>
+using index_subspace_ = typeify<size_t, ISS>;
 
 /*----------------------------------------------------------------------------*
  * Simple types

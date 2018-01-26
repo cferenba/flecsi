@@ -38,7 +38,7 @@ namespace topology {
 /// \brief mpi_data_handle_policy_t provides...
 ///
 
-template<size_t ND, size_t NM>
+template<size_t NUM_DIMS, size_t NUM_DOMS, size_t NUM_INDEX_SUBSPACES>
 struct mpi_topology_storage_policy__ {
   static constexpr size_t num_partitions = 5;
   using id_t = utils::id_t;
@@ -51,7 +51,17 @@ struct mpi_topology_storage_policy__ {
           true,
           void,
           topology_storage__>,
-      ND + 1>;
+      NUM_DIMS + 1>;
+
+  using index_subspaces_t = std::array<
+      index_space__<
+          mesh_entity_base_ *,
+          true,
+          true,
+          true,
+          void,
+          topology_storage__>,
+      NUM_INDEX_SUBSPACES>;
 
   using partition_index_spaces_t = std::array<
       index_space__<
@@ -61,14 +71,17 @@ struct mpi_topology_storage_policy__ {
           true,
           void,
           topology_storage__>,
-      ND + 1>;
+      NUM_DIMS + 1>;
 
   // array of array of domain_connectivity__
-  std::array<std::array<domain_connectivity__<ND>, NM>, NM> topology;
+  std::array<std::array<domain_connectivity__<NUM_DIMS>, NUM_DOMS>,
+    NUM_DOMS> topology;
 
-  std::array<index_spaces_t, NM> index_spaces;
+  std::array<index_spaces_t, NUM_DOMS> index_spaces;
 
-  std::array<std::array<partition_index_spaces_t, NM>, num_partitions>
+  index_subspaces_t subindex_spaces;
+
+  std::array<std::array<partition_index_spaces_t, NUM_DOMS>, num_partitions>
       partition_index_spaces;
 
   size_t color;
@@ -99,7 +112,7 @@ struct mpi_topology_storage_policy__ {
 
     for (auto & domain_connectivities : topology) {
       auto & domain_connectivity__ = domain_connectivities[domain];
-      for (size_t d = 0; d <= ND; ++d) {
+      for (size_t d = 0; d <= NUM_DIMS; ++d) {
         domain_connectivity__.get(d, dim).set_entity_storage(s);
       } // for
     }   // for
@@ -141,6 +154,28 @@ struct mpi_topology_storage_policy__ {
     }
   } // init_entities
 
+  void init_subentities(
+      size_t index_space,
+      mesh_entity_base_ * entities,
+      utils::id_t * ids,
+      size_t size,
+      size_t num_entities,
+      bool read) {
+    auto & is = subindex_spaces[index_space];
+
+    auto s = is.storage();
+    s->set_buffer(entities, num_entities, read);
+
+    auto & id_storage = is.id_storage();
+    id_storage.set_buffer(ids, num_entities, true);
+
+    if (!read) {
+      return;
+    }
+
+    is.set_end(num_entities);
+  } // init_subentities
+
   void init_connectivity(
       size_t from_domain,
       size_t to_domain,
@@ -166,18 +201,18 @@ struct mpi_topology_storage_policy__ {
     }
   } // init_connectivities
 
-  template<class T, size_t M, class... S>
-  T * make(S &&... args) {
-    using dtype = domain_entity__<M, T>;
+  template<class T, size_t DOM, class... ARG_TYPES>
+  T * make(ARG_TYPES &&... args) {
+    using dtype = domain_entity__<DOM, T>;
 
-    auto & is = index_spaces[M][T::dimension].template cast<dtype>();
+    auto & is = index_spaces[DOM][T::dimension].template cast<dtype>();
     size_t entity = is.size();
 
     auto placement_ptr = static_cast<T *>(is.storage()->buffer()) + entity;
-    auto ent = new (placement_ptr) T(std::forward<S>(args)...);
+    auto ent = new (placement_ptr) T(std::forward<ARG_TYPES>(args)...);
 
-    id_t global_id = id_t::make<T::dimension, M>(entity, color);
-    ent->template set_global_id<M>(global_id);
+    id_t global_id = id_t::make<T::dimension, DOM>(entity, color);
+    ent->template set_global_id<DOM>(global_id);
 
     auto & id_storage = is.id_storage();
 
@@ -188,18 +223,18 @@ struct mpi_topology_storage_policy__ {
     return ent;
   } // make
 
-  template<class T, size_t M, class... S>
-  T * make(const id_t & id, S &&... args) {
-    using dtype = domain_entity__<M, T>;
+  template<class T, size_t DOM, class... ARG_TYPES>
+  T * make(const id_t & id, ARG_TYPES &&... args) {
+    using dtype = domain_entity__<DOM, T>;
 
-    auto & is = index_spaces[M][T::dimension].template cast<dtype>();
+    auto & is = index_spaces[DOM][T::dimension].template cast<dtype>();
 
     size_t entity = id.entity();
 
     auto placement_ptr = static_cast<T *>(is.storage()->buffer()) + entity;
-    auto ent = new (placement_ptr) T(std::forward<S>(args)...);
+    auto ent = new (placement_ptr) T(std::forward<ARG_TYPES>(args)...);
 
-    ent->template set_global_id<M>(id);
+    ent->template set_global_id<DOM>(id);
 
     auto & id_storage = is.id_storage();
 
