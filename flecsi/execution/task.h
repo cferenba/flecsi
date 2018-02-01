@@ -87,10 +87,11 @@ struct task_interface__ {
     @param args   The arguments to pass to the user task during execution.
    */
 
-  template<size_t KEY, typename RETURN, typename ARG_TUPLE, launch_type_t launch, typename... ARGS>
+  template< launch_type_t launch, size_t KEY, typename RETURN,
+      typename ARG_TUPLE, typename... ARGS>
   static decltype(auto) execute_task( ARGS &&... args) {
     return EXECUTION_POLICY::template
-      execute_task<KEY, RETURN, ARG_TUPLE, launch>(
+      execute_task<launch, KEY, RETURN, ARG_TUPLE>(
         std::forward<ARGS>(args)...);
   } // execute_task
 
