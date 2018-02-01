@@ -289,8 +289,9 @@ clog_register_tag(execution);
   flecsi::execution::task_interface_t::execute_task<                           \
       flecsi::utils::const_string_t{EXPAND_AND_STRINGIFY(task)}.hash(),        \
       __flecsi_internal_return_type(task),                                     \
-      __flecsi_internal_arguments_type(task)>(                                 \
-      flecsi::execution::mask_to_type(flecsi::launch), ##__VA_ARGS__)
+      __flecsi_internal_arguments_type(task),                                  \
+     launch_type_t::launch>(__VA_ARGS__)
+
 
 /*!
   @def flecsi_execute_task
@@ -310,6 +311,7 @@ clog_register_tag(execution);
                                                                                \
   /* Execute the user task */                                                  \
   flecsi_execute_task_simple(nspace::task, launch, ##__VA_ARGS__)
+
 
 /*!
   @def flecsi_execute_mpi_task_simple

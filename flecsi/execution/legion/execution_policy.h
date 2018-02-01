@@ -146,8 +146,9 @@ struct legion_execution_policy_t {
     method, please see task__::execute_task.
    */
 
-  template<size_t KEY, typename RETURN, typename ARG_TUPLE, typename... ARGS>
-  static decltype(auto) execute_task(launch_type_t launch, ARGS &&... args) {
+  template<size_t KEY, typename RETURN, typename ARG_TUPLE,
+      launch_type_t launch, typename... ARGS>
+  static decltype(auto) execute_task( ARGS &&... args) {
     using namespace Legion;
 
     // Make a tuple from the task arguments.
